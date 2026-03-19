@@ -1,0 +1,60 @@
+name: Build, Test and Deploy
+
+on: [push]
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  PROJECT_PATH: 'AutoDeployDemo/AutoDeployDemo.csproj'
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    
+    steps:
+    - name: 📥 检出代码
+      uses: actions/checkout@v3
+    
+    - name: ⚙️ 安装.NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: 🔨 编译项目
+      run: dotnet build --configuration Release
+      
+    - name: 🧪 运行测试
+      run: dotnet test --verbosity normal
+    
+    - name: 📦 打包应用
+      run: |
+        # 发布应用
+        dotnet publish ${{ env.PROJECT_PATH }} -c Release -o ./publish
+        
+        # 显示打包了什么文件
+        echo "打包的文件："
+        dir ./publish
+    
+    - name: 📤 保存打包文件
+      uses: actions/upload-artifact@v3
+      with:
+        name: publish-files
+        path: ./publish/
+        retention-days: 1
+    
+    - name: 🎉 显示成功信息
+      run: |
+        echo "✅ 构建成功！"
+        echo "应用已打包到 ./publish 文件夹"
+        
+  # 可选：添加部署到服务器的步骤
+  # deploy-to-server:
+  #   needs: build-and-test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: 下载打包文件
+  #     uses: actions/download-artifact@v3
+  #     with:
+  #       name: publish-files
+  #       
+  #   - name: 显示文件列表
+  #     run: ls -la
