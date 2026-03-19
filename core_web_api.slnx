@@ -1,5 +1,0 @@
-<Solution>
-  <Project Path="../TestProject1/TestProject1.csproj" Id="c4f15ec0-2018-4da4-9f18-f17adaa178a5" />
-  <Project Path="../UnitTestProject1/UnitTestProject1.csproj" Id="08b9762a-c725-4275-8e77-d70ddf2a2bc0" />
-  <Project Path="core_web_api.csproj" />
-</Solution>
